@@ -40,6 +40,14 @@ func (s *ApsService) GetApsListByIds(ids interface{}) (list []model.Aps) {
 	return
 }
 
+// 获取所有order
+func (s *ApsService) GetOrderAll() (all []model.ApsOrder) {
+
+	db := database.NewDB()
+	db.Preload("SopProcess").Find(&all)
+	return
+}
+
 // 根据id获取order
 func (s *ApsService) GetOrderByID(id interface{}) (order model.ApsOrder) {
 

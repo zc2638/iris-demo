@@ -37,6 +37,7 @@ func main() {
 		mvc.New(api.Party("/image")).Handle(new(controller.ImageController))
 		mvc.New(api.Party("/andon")).Handle(new(controller.AndonController))
 		mvc.New(api.Party("/aps")).Handle(new(controller.ApsController))
+		mvc.New(api.Party("/web")).Handle(new(controller.WebController))
 	}
 
 	if err := app.Run(iris.Addr(":8080")); err != nil {
