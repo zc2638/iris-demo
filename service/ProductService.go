@@ -19,7 +19,7 @@ func (s *ProductService) GetAll() (all []model.Product) {
 func (s *ProductService) GetModelAllByProductID(id interface{}) (all []model.ProductModel) {
 
 	db := database.NewDB()
-	db.Where("product_id = ?", id).Where("status != ?", model.APS_STATUS_START).Find(&all)
+	db.Where("product_id = ?", id).Find(&all)
 	return
 }
 

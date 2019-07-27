@@ -3,7 +3,6 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"sop/lib/analyze"
 	"sop/model"
 	"sop/service"
 	"strings"
@@ -429,6 +428,8 @@ func (c *SopController) PostAudit() {
 		ProcessID uint     `json:"process_id"` // 工序id
 		Images    []string `json:"images"`     // 工序图片数组
 	}
+
+	var processData = make([]model.SopProcess, 0)
 	// 接收图片url
 	if status == model.SOP_PASS {
 		if err := json.Unmarshal([]byte(sopSet), &set); err != nil {
@@ -442,6 +443,7 @@ func (c *SopController) PostAudit() {
 			}
 		}
 		processes = sopService.GetProcessBySopID(sop.ID)
+
 		for _, p := range processes {
 			for _, s := range set {
 				if s.ProcessID == p.ID {
@@ -451,58 +453,59 @@ func (c *SopController) PostAudit() {
 						return
 					}
 					p.Imgs = string(imgBytes)
+					processData = append(processData, p)
 				}
 			}
 		}
 		sop.PassAt = time.Now()
 	}
 
-	if err := sopService.UpdateOne(sop, processes, nil); err != nil {
+	if err := sopService.UpdateOne(sop, processData, nil); err != nil {
 		c.Err("操作失败")
 		return
 	}
 
 	// 审核通过，推送大数据平台
-	go func(sop model.Sop) {
-
-		if sop.ID == 0 && sop.Status == model.SOP_PASS {
-			return
-		}
-
-		var sops = struct {
-			ID        uint `json:"id"`
-			CraftID   uint `json:"craft_id"`
-			ProductID uint `json:"product_id"`
-			Status    uint `json:"status"`
-		}{sop.ID, sop.CraftID, sop.ProductID, sop.Status}
-
-		var sopModels = make([]struct {
-			SopID   uint `json:"sop_id"`
-			ModelID uint `json:"model_id"`
-		}, 0)
-		for _, m := range sop.SopModel {
-			sopModels = append(sopModels, struct {
-				SopID   uint `json:"sop_id"`
-				ModelID uint `json:"model_id"`
-			}{SopID: m.SopID, ModelID: m.ModelID})
-		}
-
-		sopBytes, err := json.Marshal(sops)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		modelBytes, err := json.Marshal(sopModels)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		if err := analyze.Create(string(sopBytes), string(modelBytes)); err != nil {
-			fmt.Println(err)
-		}
-	}(sop)
+	//go func(sop model.Sop) {
+	//
+	//	if sop.ID == 0 && sop.Status == model.SOP_PASS {
+	//		return
+	//	}
+	//
+	//	var sops = struct {
+	//		ID        uint `json:"id"`
+	//		CraftID   uint `json:"craft_id"`
+	//		ProductID uint `json:"product_id"`
+	//		Status    uint `json:"status"`
+	//	}{sop.ID, sop.CraftID, sop.ProductID, sop.Status}
+	//
+	//	var sopModels = make([]struct {
+	//		SopID   uint `json:"sop_id"`
+	//		ModelID uint `json:"model_id"`
+	//	}, 0)
+	//	for _, m := range sop.SopModel {
+	//		sopModels = append(sopModels, struct {
+	//			SopID   uint `json:"sop_id"`
+	//			ModelID uint `json:"model_id"`
+	//		}{SopID: m.SopID, ModelID: m.ModelID})
+	//	}
+	//
+	//	sopBytes, err := json.Marshal(sops)
+	//	if err != nil {
+	//		fmt.Println(err)
+	//		return
+	//	}
+	//
+	//	modelBytes, err := json.Marshal(sopModels)
+	//	if err != nil {
+	//		fmt.Println(err)
+	//		return
+	//	}
+	//
+	//	if err := analyze.Create(string(sopBytes), string(modelBytes)); err != nil {
+	//		fmt.Println(err)
+	//	}
+	//}(sop)
 
 	c.Succ("操作成功")
 }

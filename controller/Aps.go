@@ -54,6 +54,9 @@ func (c *ApsController) GetList() {
 
 	var data = make([]map[string]interface{}, 0)
 	for _, v := range all {
+		if v.Status == model.APS_STATUS_START {
+			continue
+		}
 		if v.SopID != 0 {
 			continue
 		}
@@ -162,6 +165,8 @@ func (c *ApsController) PostSopIssued() {
 		c.Err("工单数量与sop工序不匹配")
 		return
 	}
+
+	var orderData = make([]model.ApsOrder, 0)
 	for _, order := range orders {
 
 		var item model.CraftItem
@@ -199,12 +204,13 @@ func (c *ApsController) PostSopIssued() {
 
 		order.SopProcessID = processId
 		order.Status = model.APS_STATUS_START
+		orderData = append(orderData, order)
 	}
 
 	aps.SopID = sop.ID
 	aps.Status = model.APS_STATUS_START
 
-	if err := apsService.UpdateApsAndOrder([]model.Aps{aps}, orders); err != nil {
+	if err := apsService.UpdateApsAndOrder([]model.Aps{aps}, orderData); err != nil {
 		c.Err("操作失败")
 		return
 	}
