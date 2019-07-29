@@ -175,7 +175,7 @@ func (c *HomeController) PostShow() {
 		// 合格数量
 		"qualifiedProductQuantity": order.CompleteNum,
 		// 工序id
-		"sopProcessId": order.ProcessID,
+		"sopProcessId": order.SopProcessID,
 		// 版本号
 		"version": sop.Version,
 		// 雷区预警

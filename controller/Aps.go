@@ -87,6 +87,7 @@ func (c *ApsController) GetList() {
 // 手动匹配 —— sop列表
 func (c *ApsController) GetSopList() {
 
+	// todo type 和 model匹配
 	apsID, err := c.Ctx.URLParamInt("apsId")
 	if err != nil {
 		c.Err("作业计划解析失败")
@@ -184,7 +185,7 @@ func (c *ApsController) PostSopIssued() {
 		var processId uint
 		for _, p := range sop.SopProcess {
 			if item.ID == p.ProcessID {
-				processId = p.ProcessID
+				processId = p.ID
 				break
 			}
 		}
