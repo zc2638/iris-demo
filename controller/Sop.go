@@ -560,7 +560,7 @@ func (c *SopController) PostMatch() {
 func (c *SopController) PostIssued() {
 
 	apsSet := c.Ctx.PostValue("apsSet")
-	fmt.Println("apsSet:", apsSet)
+
 	var set []struct {
 		ApsID uint `json:"apsId"`
 		SopID uint `json:"sopId"`
@@ -570,14 +570,14 @@ func (c *SopController) PostIssued() {
 		c.Err("数据解析失败")
 		return
 	}
-	fmt.Println("set:", set)
+
 	sopIds := make([]uint, 0)
 	apsIds := make([]uint, 0)
 	for _, s := range set {
 		sopIds = append(sopIds, s.SopID)
 		apsIds = append(apsIds, s.ApsID)
 	}
-	fmt.Println("sopIds:", sopIds, "apsIds:", apsIds)
+
 	sops := new(service.SopService).GetSopListByIds(sopIds)
 	for _, s := range sops {
 		if s.Status != model.SOP_PASS {
@@ -588,8 +588,8 @@ func (c *SopController) PostIssued() {
 
 	apsService := new(service.ApsService)
 	apsList := apsService.GetApsListByIds(apsIds)
-	fmt.Println("apsList:", apsList)
-	fmt.Println("sops:", sops)
+
+	var apsData = make([]model.Aps, 0)
 	var orderList []model.ApsOrder
 	for _, aps := range apsList {
 
@@ -610,6 +610,7 @@ func (c *SopController) PostIssued() {
 			}
 		}
 
+		var orderData = make([]model.ApsOrder, 0)
 		for _, order := range orders {
 			var sts = false
 			for _, process := range sop.SopProcess {
@@ -617,6 +618,7 @@ func (c *SopController) PostIssued() {
 					order.SopProcessID = process.ID
 					order.Status = model.APS_STATUS_START
 					sts = true
+					orderData = append(orderData, order)
 					break
 				}
 			}
@@ -626,13 +628,15 @@ func (c *SopController) PostIssued() {
 			}
 		}
 
-		orderList = append(orderList, orders...)
+		if len(orderData) > 0 {
+			orderList = append(orderList, orderData...)
+		}
 		aps.SopID = sop.ID
 		aps.Status = model.APS_STATUS_START
-
+		apsData = append(apsData, aps)
 	}
-	fmt.Println("orderList:", orderList)
-	if err := apsService.UpdateApsAndOrder(apsList, orderList); err != nil {
+
+	if err := apsService.UpdateApsAndOrder(apsData, orderList); err != nil {
 		c.Err("操作失败")
 		return
 	}
