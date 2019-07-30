@@ -562,8 +562,8 @@ func (c *SopController) PostIssued() {
 	apsSet := c.Ctx.PostValue("apsSet")
 	fmt.Println("apsSet:", apsSet)
 	var set []struct {
-		ApsID uint `json:"aps_id"`
-		SopID uint `json:"sop_id"`
+		ApsID uint `json:"apsId"`
+		SopID uint `json:"sopId"`
 	}
 
 	if err := json.Unmarshal([]byte(apsSet), &set); err != nil {
