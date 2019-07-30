@@ -36,6 +36,7 @@ var minefieldImg = []string{
 func seedCraft() {
 
 	checkImgJson, _ := json.Marshal(checkImg)
+	minefieldImgJson, _ := json.Marshal(minefieldImg)
 
 	now := time.Now()
 	db := NewDB()
@@ -54,8 +55,8 @@ func seedCraft() {
 			for _, c := range crafts {
 				if c.Name == "#01鼠标外壳粗加工" {
 					db.Exec(
-						"INSERT INTO `craft_items` (`craft_id`, `name`, `check_img`, `sort`, `status`, `created_at`, `updated_at`) VALUES (?)",
-						[]interface{}{c.ID, "通孔", checkImgJson, 1, 0, now, now},
+						"INSERT INTO `craft_items` (`craft_id`, `name`, `check_img`, `minefield_img`, `sort`, `status`, `created_at`, `updated_at`) VALUES (?)",
+						[]interface{}{c.ID, "通孔", checkImgJson, minefieldImgJson, 1, 0, now, now},
 					)
 				}
 			}

@@ -12,10 +12,11 @@ type Craft struct {
 // 工艺工序
 type CraftItem struct {
 	AutoID
-	CraftID  uint   `json:"craft_id"`                   // 工艺方案id
-	Name     string `json:"name"`                       // 工艺工序名称
-	CheckImg string `json:"check_img"`                  // 防差错图片
-	Sort     uint   `json:"sort"`                       // 工序序号(步骤号)
-	Status   uint   `gorm:"type:tinyint" json:"status"` // 状态
+	CraftID      uint   `json:"craft_id"`                   // 工艺方案id
+	Name         string `json:"name"`                       // 工艺工序名称
+	CheckImg     string `json:"check_img"`                  // 防差错图片
+	MinefieldImg string `json:"minefield_img"`              // 雷区预警图片(json数组)
+	Sort         uint   `json:"sort"`                       // 工序序号(步骤号)
+	Status       uint   `gorm:"type:tinyint" json:"status"` // 状态
 	Timestamps
 }
