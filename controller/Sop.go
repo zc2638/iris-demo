@@ -225,13 +225,14 @@ func (c *SopController) PostCreate() {
 		for _, c := range craftSet {
 			if c.ID == s.CraftItemID {
 				process = append(process, model.SopProcess{
-					ProcessID: c.ID,
-					Title:     c.Name,
-					Content:   s.Content,
-					Annex:     s.Annex,
-					CheckImg:  c.CheckImg,
-					IsCheck:   s.IsCheck,
-					Sort:      c.Sort,
+					ProcessID:    c.ID,
+					Title:        c.Name,
+					Content:      s.Content,
+					Annex:        s.Annex,
+					CheckImg:     c.CheckImg,
+					MinefieldImg: c.MinefieldImg,
+					IsCheck:      s.IsCheck,
+					Sort:         c.Sort,
 				})
 			}
 		}
@@ -359,7 +360,6 @@ func (c *SopController) PostModify() {
 	for _, s := range processSet {
 		for _, c := range craftSet {
 			if c.ID == s.CraftItemID {
-				fmt.Println("craftItem minefield_img:", c.MinefieldImg)
 				process = append(process, model.SopProcess{
 					ProcessID:    c.ID,
 					Title:        c.Name,
@@ -373,7 +373,6 @@ func (c *SopController) PostModify() {
 			}
 		}
 	}
-	fmt.Println("process:", process)
 
 	models := make([]model.SopModel, 0)
 	for _, m := range modelSet {
