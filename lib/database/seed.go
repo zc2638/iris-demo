@@ -25,7 +25,8 @@ type checkImgData struct {
 
 var checkImg = checkImgData{
 	"http://puh01tec3.bkt.clouddn.com/1564121305087721-m1.jpeg",
-	"http://puh01tec3.bkt.clouddn.com/1564122609174237-6181564122551_.pic_hd.jpg",
+	//"http://puh01tec3.bkt.clouddn.com/1564122609174237-6181564122551_.pic_hd.jpg",
+	"http://puh01tec3.bkt.clouddn.com/1564477521235111-%E7%BB%84%201.png",
 }
 var minefieldImg = []string{
 	"http://puh01tec3.bkt.clouddn.com/1564121305087721-m1.jpeg",
