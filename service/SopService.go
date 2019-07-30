@@ -149,11 +149,11 @@ func (s *SopService) Create(sop model.Sop, process []model.SopProcess, models []
 
 	var processExecSet = make([]interface{}, 0)
 	for _, p := range process {
-		processExecSet = append(processExecSet, []interface{}{sop.ID, p.ProcessID, p.Title, p.Content, p.Imgs, p.Annex, p.CheckImg, p.IsCheck, p.Sort, now, now})
+		processExecSet = append(processExecSet, []interface{}{sop.ID, p.ProcessID, p.Title, p.Content, p.Imgs, p.Annex, p.CheckImg, p.MinefieldImg, p.IsCheck, p.Sort, now, now})
 	}
 
 	res := tx.Exec(
-		"INSERT INTO `sop_processes` (`sop_id`, `process_id`, `title`, `content`, `imgs`, `annex`, `check_img`, `is_check`, `sort`, `created_at`, `updated_at`) VALUES "+strings.Join(processNumSet, ", "),
+		"INSERT INTO `sop_processes` (`sop_id`, `process_id`, `title`, `content`, `imgs`, `annex`, `check_img`, `minefield_img`, `is_check`, `sort`, `created_at`, `updated_at`) VALUES "+strings.Join(processNumSet, ", "),
 		processExecSet...
 	)
 	if res.RowsAffected != int64(processNum) {

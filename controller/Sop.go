@@ -220,12 +220,10 @@ func (c *SopController) PostCreate() {
 		Version:    version,
 	}
 
-	fmt.Println("process start")
 	process := make([]model.SopProcess, 0)
 	for _, s := range processSet {
 		for _, c := range craftSet {
 			if c.ID == s.CraftItemID {
-				fmt.Println("MinefieldImg:", c.MinefieldImg)
 				process = append(process, model.SopProcess{
 					ProcessID:    c.ID,
 					Title:        c.Name,
@@ -239,7 +237,6 @@ func (c *SopController) PostCreate() {
 			}
 		}
 	}
-	fmt.Println("process end")
 
 	models := make([]model.SopModel, 0)
 	for _, m := range modelSet {
