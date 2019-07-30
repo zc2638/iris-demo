@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -21,6 +22,7 @@ func init() {
 
 	DB, err = gorm.Open("sqlite3", "sop.db")
 	if err != nil {
+		fmt.Println(err)
 		panic("连接数据库失败")
 	}
 

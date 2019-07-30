@@ -577,7 +577,7 @@ func (c *SopController) PostIssued() {
 		sopIds = append(sopIds, s.SopID)
 		apsIds = append(apsIds, s.ApsID)
 	}
-
+	fmt.Println(sopIds, apsIds)
 	sops := new(service.SopService).GetSopListByIds(sopIds)
 	for _, s := range sops {
 		if s.Status != model.SOP_PASS {
@@ -588,7 +588,8 @@ func (c *SopController) PostIssued() {
 
 	apsService := new(service.ApsService)
 	apsList := apsService.GetApsListByIds(apsIds)
-
+	fmt.Println(apsList)
+	fmt.Println(sops)
 	var orderList []model.ApsOrder
 	for _, aps := range apsList {
 
@@ -630,7 +631,7 @@ func (c *SopController) PostIssued() {
 		aps.Status = model.APS_STATUS_START
 
 	}
-
+	fmt.Println(orderList)
 	if err := apsService.UpdateApsAndOrder(apsList, orderList); err != nil {
 		c.Err("操作失败")
 		return
