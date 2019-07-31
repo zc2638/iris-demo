@@ -212,8 +212,24 @@ func (c *HomeController) PostCheckSave() {
 		c.Err("编码失败")
 		return
 	}
-	process.CheckImg = string(b)
 
+	checkService := new(service.CheckService)
+	check := checkService.GetCheckByUrl(process.CheckImg)
+	if check.ID == 0 {
+		c.Err("未查询到历史防差错图片")
+		return
+	}
+
+	if err := checkService.Create(model.Check{
+		Url: checkImgData.Item,
+		Colors: check.Colors,
+		Size: check.Size,
+	}); err != nil {
+		c.Err(err.Error())
+		return
+	}
+
+	process.CheckImg = string(b)
 	if err := sopService.UpdateProcessOne(process); err != nil {
 		c.Err(err.Error())
 		return

@@ -38,20 +38,26 @@ func (c *FaceController) PostLogin() {
 		return
 	}
 
+	var user model.User
 	if result.Results[0].Confidence < result.Thresholds.OneE5 {
-		c.Err("不建议是同一个人")
-		return
+		// 识别失败，则指定默认用户
+		user = new(service.UserService).GetUserByID(1)
+	} else {
+		faceToken := result.Results[0].FaceToken
+		fmt.Println(faceToken)
+		user = new(service.UserService).GetUserByFaceToken(faceToken)
 	}
-
-	faceToken := result.Results[0].FaceToken
-	fmt.Println(faceToken)
-	user := new(service.UserService).GetUserByFaceToken(faceToken)
 	if user.ID == 0 {
 		c.Err("不存在的用户")
 		return
 	}
 
-	orders := new(service.ApsService).GetOrdersByUidAndStation(user.ID, station)
+	var orders []model.ApsOrder
+	if user.ID == 1 {
+		orders = new(service.ApsService).GetOrderAll()
+	} else {
+		orders = new(service.ApsService).GetOrdersByUidAndStation(user.ID, station)
+	}
 
 	var modelIds = make([]uint, 0)
 	for _, v := range orders {

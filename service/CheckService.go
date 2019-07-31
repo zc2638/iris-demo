@@ -16,6 +16,17 @@ func (s *CheckService) GetCheckByUrl(url interface{}) (check model.Check) {
 	return
 }
 
+// 添加
+func (s *CheckService) Create(check model.Check) error {
+
+	db := database.NewDB()
+	db.Create(&check)
+	if db.NewRecord(check) == true {
+		return errors.New("check创建失败")
+	}
+	return nil
+}
+
 // 更新
 func (s *CheckService) UpdateOne(check model.Check) error {
 

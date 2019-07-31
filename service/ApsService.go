@@ -44,7 +44,10 @@ func (s *ApsService) GetApsListByIds(ids interface{}) (list []model.Aps) {
 func (s *ApsService) GetOrderAll() (all []model.ApsOrder) {
 
 	db := database.NewDB()
-	db.Preload("SopProcess").Find(&all)
+	db.Preload("SopProcess").
+		Preload("ApsOrderQuality").
+		Preload("Aps").
+		Find(&all)
 	return
 }
 
