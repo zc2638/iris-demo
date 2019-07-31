@@ -29,6 +29,7 @@ func (s *SopService) GetAll() (list []model.Sop) {
 	db := database.NewDB()
 	db.Where("is_template = ?", 0).
 		Preload("SopModel").
+		Preload("SopProcess").
 		Preload("Product").
 		Preload("Craft").
 		Find(&list)

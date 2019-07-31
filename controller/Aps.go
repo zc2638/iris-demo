@@ -87,12 +87,13 @@ func (c *ApsController) GetList() {
 // 手动匹配 —— sop列表
 func (c *ApsController) GetSopList() {
 
-	// todo type 和 model匹配
+	typ := c.Ctx.URLParamIntDefault("type", 1)
 	apsID, err := c.Ctx.URLParamInt("apsId")
 	if err != nil {
 		c.Err("作业计划解析失败")
 		return
 	}
+
 
 	aps := new(service.ApsService).GetApsByID(apsID)
 	if aps.ID == 0 {
@@ -100,10 +101,18 @@ func (c *ApsController) GetSopList() {
 		return
 	}
 
-	sopList := new(service.SopService).GetSopListByProductID(aps.ProductModel.ProductID)
+	var sopList []model.Sop
+	if typ == 2 {
+		sopList = new(service.SopService).GetSopListByProductID(aps.ProductModel.ProductID)
+	} else {
+		sopList = new(service.SopService).GetAll()
+	}
 
 	var data = make([]map[string]interface{}, 0)
 	for _, sop := range sopList {
+		if sop.CraftID != aps.CraftID {
+			continue
+		}
 
 		models := make([]string, 0)
 		modelIds := make([]uint, 0)
