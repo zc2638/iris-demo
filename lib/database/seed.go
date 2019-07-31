@@ -243,7 +243,7 @@ func seedSop() {
 			for _, s := range sops {
 
 				var items []model.CraftItem
-				db.Find(&items)
+				db.Where("craft_id = ?", s.CraftID).Find(&items)
 
 				if items != nil && len(items) > 0 {
 					for _, t := range items {
