@@ -24,11 +24,13 @@ func (s *SopService) GetList(page, pageSize int) (list []model.Sop) {
 }
 
 // 获取所有sop
-func (s *SopService) GetAll() (list []model.Sop) {
+func (s *SopService) GetAll(isAll bool) (list []model.Sop) {
 
 	db := database.NewDB()
-	db.Where("is_template = ?", 0).
-		Preload("SopModel").
+	if isAll == false {
+		db = db.Where("is_template = ?", 0)
+	}
+	db.Preload("SopModel").
 		Preload("SopProcess").
 		Preload("Product").
 		Preload("Craft").

@@ -105,7 +105,7 @@ func (c *ApsController) GetSopList() {
 	if typ == 2 {
 		sopList = new(service.SopService).GetSopListByProductID(aps.ProductModel.ProductID)
 	} else {
-		sopList = new(service.SopService).GetAll()
+		sopList = new(service.SopService).GetAll(false)
 	}
 
 	var data = make([]map[string]interface{}, 0)

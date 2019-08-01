@@ -14,7 +14,7 @@ type SopController struct{ Base }
 // 获取sop列表(不分页)
 func (c *SopController) GetList() {
 
-	list := new(service.SopService).GetAll()
+	list := new(service.SopService).GetAll(true)
 
 	var data = make([]map[string]interface{}, 0)
 	for _, v := range list {
@@ -527,7 +527,7 @@ func (c *SopController) PostMatch() {
 	sopService := new(service.SopService)
 
 	apsList := apsService.GetApsListByIds(idArr)
-	sopList := sopService.GetAll()
+	sopList := sopService.GetAll(false)
 
 	var data = make([]interface{}, 0)
 	for _, aps := range apsList {
