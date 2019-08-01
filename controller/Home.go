@@ -121,7 +121,11 @@ func (c *HomeController) PostShow() {
 			processSet = append(processSet, map[string]interface{}{
 				"id": v.ID,
 				// 工序名
-				"title": v.Title,
+				"title":        v.Title,
+				"sopImg":       v.Imgs,
+				"checkImg":     v.CheckImg,
+				"isCheck":      v.IsCheck,
+				"minefieldImg": v.MinefieldImg,
 			})
 		}
 	}
@@ -221,9 +225,9 @@ func (c *HomeController) PostCheckSave() {
 	}
 
 	if err := checkService.Create(model.Check{
-		Url: checkImgData.Item,
+		Url:    checkImgData.Item,
 		Colors: check.Colors,
-		Size: check.Size,
+		Size:   check.Size,
 	}); err != nil {
 		c.Err(err.Error())
 		return
