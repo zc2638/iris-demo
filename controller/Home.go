@@ -6,8 +6,10 @@ import (
 	"github.com/kataras/iris"
 	"io/ioutil"
 	"sop/lib/AICheck"
+	"sop/lib/curl"
 	"sop/model"
 	"sop/service"
+	"strings"
 )
 
 type HomeController struct{ Base }
@@ -279,14 +281,32 @@ func (c *HomeController) PostCheckImage() {
 		return
 	}
 
+	// 图片流多次使用，所以转成二进制
 	fileByte, err := ioutil.ReadAll(file)
 	if err != nil {
 		c.Err("图片信息异常")
 		return
 	}
 
+	// 判断标准图是否已经解析过
 	if check.Size == "" {
-		infoRes, err := AICheck.CheckInfo(bytes.NewReader(fileByte), info, map[string]string{
+
+		// 获取标准图
+		h := curl.HttpReq{
+			Url: checkImg.Item,
+		}
+		currentImg, err := h.Get()
+		if err != nil {
+			c.Err("图示获取失败")
+			return
+		}
+
+		// 获取图片名称
+		itemArr := strings.Split(checkImg.Item, "/")
+		filename := itemArr[len(itemArr) - 1]
+
+		// 解析标准图
+		infoRes, err := AICheck.CheckInfo(bytes.NewReader(currentImg), filename, map[string]string{
 			"colors": check.Colors,
 		})
 		if err != nil {

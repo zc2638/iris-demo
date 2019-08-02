@@ -26,7 +26,7 @@ type PosResult struct {
 }
 
 // 标准图像信息识别
-func CheckInfo(file io.Reader, info *multipart.FileHeader, data map[string]string) (result InfoResult, err error) {
+func CheckInfo(file io.Reader, filename string, data map[string]string) (result InfoResult, err error) {
 
 	const url = domain + "/check/info"
 
@@ -34,7 +34,7 @@ func CheckInfo(file io.Reader, info *multipart.FileHeader, data map[string]strin
 		Url: url,
 		FormData: curl.FormData{
 			File: map[string]curl.FileInfo{
-				"picture": {info.Filename, file},
+				"picture": {filename, file},
 			},
 			Params: data,
 			//Params: map[string]string{
