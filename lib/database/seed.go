@@ -494,8 +494,8 @@ func seedCheck() {
 	if check.ID == 0 {
 		db.Exec(
 			"INSERT INTO `checks` (`url`, `colors`, `size`) VALUES (?), (?)",
-			[]interface{}{checkImg.Item, `{"hotpink":[[[160,90,150],[180,255,255]]],"yellow":[[[0,80,150],[50,255,255]]]}`, `{"w":600,"h":800}`},
-			[]interface{}{mobileCheckImg.Item, `{"hotpink":[[[150,43,46],[180,255,255]]],"green":[[[35,100,101],[100,255,255]]]}`, `{"w":600,"h":800}`},
+			[]interface{}{checkImg.Item, `{"hotpink":[[[160,90,150],[180,255,255]]],"yellow":[[[0,80,150],[50,255,255]]]}`, ""},
+			[]interface{}{mobileCheckImg.Item, `{"hotpink":[[[150,43,46],[180,255,255]]],"green":[[[35,100,101],[100,255,255]]]}`, ""},
 		)
 	}
 }

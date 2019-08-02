@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/context"
 	"github.com/kataras/iris/core/errors"
@@ -14,6 +15,7 @@ type Base struct {
 
 func (c *Base) Err(msg string) {
 
+	fmt.Println("[Error]:", msg)
 	_, err := c.Ctx.JSON(iris.Map{
 		"code":    400,
 		"message": msg,

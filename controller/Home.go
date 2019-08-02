@@ -285,7 +285,7 @@ func (c *HomeController) PostCheckImage() {
 		return
 	}
 
-	if _, ok := colors["scale"]; !ok {
+	if check.Size == "" {
 		infoRes, err := AICheck.CheckInfo(bytes.NewReader(fileByte), info, map[string]string{
 			"colors": check.Colors,
 		})
@@ -306,6 +306,9 @@ func (c *HomeController) PostCheckImage() {
 			Rect   interface{} `json:"rect"`
 			Scale  interface{} `json:"scale"`
 		})
+
+		var updateSts = true
+
 		position := infoRes.Info.Position
 		for k, v := range position {
 			if cv, ok := colors[k]; ok {
@@ -318,6 +321,9 @@ func (c *HomeController) PostCheckImage() {
 					"x": 0.1,
 					"y": 0.1,
 				}}
+				if v == nil {
+					updateSts = false
+				}
 			}
 		}
 
@@ -328,9 +334,11 @@ func (c *HomeController) PostCheckImage() {
 		}
 
 		check.Colors = string(colorByte)
-		if err := checkService.UpdateOne(check); err != nil {
-			c.Err(err.Error())
-			return
+		if updateSts == true {
+			if err := checkService.UpdateOne(check); err != nil {
+				c.Err(err.Error())
+				return
+			}
 		}
 	}
 

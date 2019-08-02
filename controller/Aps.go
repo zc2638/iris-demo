@@ -94,7 +94,6 @@ func (c *ApsController) GetSopList() {
 		return
 	}
 
-
 	aps := new(service.ApsService).GetApsByID(apsID)
 	if aps.ID == 0 {
 		c.Err("不存在的作业计划")
@@ -224,5 +223,12 @@ func (c *ApsController) PostSopIssued() {
 		c.Err("操作失败")
 		return
 	}
+	c.Succ("操作成功")
+}
+
+// 作业计划重置
+func (c *ApsController) GetReset() {
+
+	new(service.ApsService).UpdateApsAndOrderToDefaultStatus()
 	c.Succ("操作成功")
 }

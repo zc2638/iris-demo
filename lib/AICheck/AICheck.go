@@ -64,14 +64,9 @@ func CheckPos(file io.Reader, info *multipart.FileHeader, data map[string]string
 				"picture": {info.Filename, file},
 			},
 			Params: data,
-			//			Params: map[string]string{
-			//				"colors": `{"red":{
-			//	"ranges": [[[0, 43, 46],[10, 255, 255]], [[156,  43,  46],[180, 255, 255]]],
-			//	"rect": {"x": 480, "y": 365, "w": 216, "h": 233},
-			//	"scale": {"x":0.1, "y":0.1}
-			//}
-			//}`,
-			//			},
+			//Params: map[string]string{
+			//	"colors": `{"red":{ "ranges": [[[0, 43, 46],[10, 255, 255]], [[156,  43,  46],[180, 255, 255]]],"rect": {"x": 480, "y": 365, "w": 216, "h": 233},"scale": {"x":0.1, "y":0.1}}}`,
+			//},
 		},
 	}
 

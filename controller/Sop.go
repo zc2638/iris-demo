@@ -534,9 +534,9 @@ func (c *SopController) PostMatch() {
 		var sopCurrent model.Sop
 		var sopSimilar model.Sop
 		for _, sop := range sopList {
-			if aps.ProductModel.ProductID == sop.ProductID {
+			if aps.CraftID == sop.CraftID {
 				sopSimilar = sop
-				if aps.CraftID == sop.CraftID {
+				if aps.ProductModel.ProductID == sop.ProductID {
 					sopCurrent = sop
 				}
 				break

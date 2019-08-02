@@ -81,7 +81,7 @@ func (s *ApsService) GetOrdersByUidAndStation(uid, station interface{}) (list []
 // 更新aps和order
 func (s *ApsService) UpdateApsAndOrder(apsList []model.Aps, orders []model.ApsOrder) error {
 
-	db := database.NewDB()
+	db := database.NewDB().Debug()
 	tx := db.Begin()
 
 	for _, aps := range apsList {
@@ -100,4 +100,20 @@ func (s *ApsService) UpdateApsAndOrder(apsList []model.Aps, orders []model.ApsOr
 
 	tx.Commit()
 	return nil
+}
+
+// 重置aps和order状态
+func (s *ApsService) UpdateApsAndOrderToDefaultStatus() {
+
+
+	db := database.NewDB()
+
+	db.Model(&model.Aps{}).Updates(map[string]interface{}{
+		"status": model.APS_STATUS_DEFAULT,
+		"sop_id": 0,
+	})
+	db.Model(&model.ApsOrder{}).Updates(map[string]interface{}{
+		"status": model.APS_STATUS_DEFAULT,
+		"sop_process_id": 0,
+	})
 }
