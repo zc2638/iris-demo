@@ -81,7 +81,7 @@ func (s *ApsService) GetOrdersByUidAndStation(uid, station interface{}) (list []
 // 更新aps和order
 func (s *ApsService) UpdateApsAndOrder(apsList []model.Aps, orders []model.ApsOrder) error {
 
-	db := database.NewDB().Debug()
+	db := database.NewDB()
 	tx := db.Begin()
 
 	for _, aps := range apsList {
