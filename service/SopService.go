@@ -35,6 +35,7 @@ func (s *SopService) GetAll(isAll bool) (list []model.Sop) {
 		Preload("SopProcess").
 		Preload("Product").
 		Preload("Craft").
+		Order("id DESC").
 		Find(&list)
 	return
 }
