@@ -55,6 +55,7 @@ func (s *ApsService) GetOrderAll() (all []model.ApsOrder) {
 	db.Preload("SopProcess").
 		Preload("ApsOrderQuality").
 		Preload("Aps").
+		Order("id DESC").
 		Find(&all)
 	return
 }
@@ -77,10 +78,11 @@ func (s *ApsService) GetOrdersByUidAndStation(uid, station interface{}) (list []
 	db := database.NewDB()
 	db.Where("uid = ?", uid).
 		Where("station = ?", station).
-		//Where("status", model.APS_STATUS_START).
+		Where("status", model.APS_STATUS_START).
 		Preload("SopProcess").
 		Preload("ApsOrderQuality").
 		Preload("Aps").
+		Order("id DESC").
 		Limit(20).
 		Find(&list)
 	return
