@@ -3,6 +3,7 @@ package database
 import (
 	"encoding/json"
 	"sop/model"
+	"strconv"
 	"time"
 )
 
@@ -12,10 +13,9 @@ func seed() {
 	seedCraft()
 	seedProduct()
 	seedSop()
-	seedApsOrder()
+	SeedApsOrder()
 	seedAndon()
 	seedCheck()
-	seedOrderQuality()
 }
 
 type checkImgData struct {
@@ -92,41 +92,40 @@ func seedCraft() {
 		if crafts != nil && len(crafts) > 0 {
 			for _, c := range crafts {
 				sql := "INSERT INTO `craft_items` (`craft_id`, `name`, `check_img`, `minefield_img`, `sort`, `status`, `created_at`, `updated_at`) VALUES "
-				// TODO 处理防差错图片 和 雷区预警图片
 				switch c.Name {
 				case "#99手机外壳精加工":
 					db.Exec(
-						sql + "(?)",
+						sql+"(?)",
 						[]interface{}{c.ID, "镭雕", mobileCheckImgJson, mobileMinefieldImgJson, 1, 0, now, now},
 					)
 				case "#66手机外壳精加工":
 					db.Exec(
-						sql + "(?), (?)",
+						sql+"(?), (?)",
 						[]interface{}{c.ID, "丝印", mobileCheckImgJson, mobileMinefieldImgJson, 1, 0, now, now},
 						[]interface{}{c.ID, "镭雕", mobileCheckImgJson, mobileMinefieldImgJson, 2, 0, now, now},
 					)
 				case "#54手机外壳精加工":
 					db.Exec(
-						sql + "(?), (?)",
+						sql+"(?), (?)",
 						[]interface{}{c.ID, "镭雕", mobileCheckImgJson, mobileMinefieldImgJson, 1, 0, now, now},
 						[]interface{}{c.ID, "丝印", mobileCheckImgJson, mobileMinefieldImgJson, 2, 0, now, now},
 					)
 				case "#50鼠标外壳粗加工":
 					db.Exec(
-						sql + "(?), (?), (?)",
+						sql+"(?), (?), (?)",
 						[]interface{}{c.ID, "通圆孔", checkImgJson, minefieldImgJson, 1, 0, now, now},
 						[]interface{}{c.ID, "通小孔", checkImgJson, minefieldImgJson, 2, 0, now, now},
 						[]interface{}{c.ID, "表面处理", checkImgJson, minefieldImgJson, 3, 0, now, now},
 					)
 				case "#90鼠标外壳粗加工":
 					db.Exec(
-						sql + "(?), (?)",
+						sql+"(?), (?)",
 						[]interface{}{c.ID, "通圆孔", checkImgJson, minefieldImgJson, 1, 0, now, now},
 						[]interface{}{c.ID, "通小孔", checkImgJson, minefieldImgJson, 2, 0, now, now},
 					)
 				case "#01鼠标外壳粗加工":
 					db.Exec(
-						sql + "(?)",
+						sql+"(?)",
 						[]interface{}{c.ID, "通孔", checkImgJson, minefieldImgJson, 1, 0, now, now},
 					)
 				}
@@ -200,17 +199,17 @@ func seedSop() {
 						switch c.Name {
 						case "#01鼠标外壳粗加工":
 							db.Exec(
-								sql + "(?)",
+								sql+"(?)",
 								[]interface{}{"鼠标外壳作业指导书模板01", c.ID, m.ProductID, 1, 1, 0, now, now},
 							)
 						case "#90鼠标外壳粗加工":
 							db.Exec(
-								sql + "(?)",
+								sql+"(?)",
 								[]interface{}{"鼠标外壳作业指导书模板02", c.ID, m.ProductID, 1, 1, 0, now, now},
 							)
 						case "#50鼠标外壳粗加工":
 							db.Exec(
-								sql + "(?)",
+								sql+"(?)",
 								[]interface{}{"鼠标外壳作业指导书模板03", c.ID, m.ProductID, 1, 1, 0, now, now},
 							)
 						}
@@ -219,17 +218,17 @@ func seedSop() {
 						switch c.Name {
 						case "#99手机外壳精加工":
 							db.Exec(
-								sql + "(?)",
+								sql+"(?)",
 								[]interface{}{"手机外壳作业指导书模板A", c.ID, m.ProductID, 1, 1, 0, now, now},
 							)
 						case "#66手机外壳精加工":
 							db.Exec(
-								sql + "(?)",
+								sql+"(?)",
 								[]interface{}{"手机外壳作业指导书模板B", c.ID, m.ProductID, 1, 1, 0, now, now},
 							)
 						case "#54手机外壳精加工":
 							db.Exec(
-								sql + "(?)",
+								sql+"(?)",
 								[]interface{}{"手机外壳作业指导书模板C", c.ID, m.ProductID, 1, 1, 0, now, now},
 							)
 						}
@@ -328,13 +327,18 @@ func seedSop() {
 }
 
 // 作业计划—工单 数据填充
-func seedApsOrder() {
+func SeedApsOrder(nums ...int) {
+
+	var num int
+	if nums != nil && len(nums) == 1 {
+		num = nums[0]
+	}
 
 	now := time.Now()
 	db := NewDB()
 
 	var aps model.Aps
-	db.First(&aps)
+	db.Where("job_plan_number = ?", "WP"+strconv.Itoa(201987771341+num)).First(&aps)
 	if aps.ID == 0 {
 
 		var models []model.ProductModel
@@ -352,43 +356,43 @@ func seedApsOrder() {
 					case "#78":
 						if c.Name == "#01鼠标外壳粗加工" {
 							db.Exec(
-								sql + "(?)",
-								[]interface{}{"WP201987771341", "line-m001", m.ID, c.ID, 20, 7, 4, 0, now, now},
+								sql+"(?)",
+								[]interface{}{"WP" + strconv.Itoa(201987771341+num), "line-m001", m.ID, c.ID, 20, 7, 4, 0, now, now},
 							)
 						}
 					case "#77":
 						if c.Name == "#90鼠标外壳粗加工" {
 							db.Exec(
-								sql + "(?)",
-								[]interface{}{"WP201966550001", "line-m002", m.ID, c.ID, 20, 7, 4, 0, now, now},
+								sql+"(?)",
+								[]interface{}{"WP" + strconv.Itoa(201966550001+num), "line-m002", m.ID, c.ID, 30, 8, 5, 0, now, now},
 							)
 						}
 					case "#79":
 						if c.Name == "#50鼠标外壳粗加工" {
 							db.Exec(
-								sql + "(?)",
-								[]interface{}{"WP201966550002", "line-m003", m.ID, c.ID, 20, 7, 4, 0, now, now},
+								sql+"(?)",
+								[]interface{}{"WP" + strconv.Itoa(201966550002+num), "line-m003", m.ID, c.ID, 40, 9, 6, 0, now, now},
 							)
 						}
 					case "#11":
 						if c.Name == "#99手机外壳精加工" {
 							db.Exec(
-								sql + "(?)",
-								[]interface{}{"WP201900220011", "line-p001", m.ID, c.ID, 20, 7, 4, 0, now, now},
+								sql+"(?)",
+								[]interface{}{"WP" + strconv.Itoa(201900220011+num), "line-p001", m.ID, c.ID, 50, 10, 7, 0, now, now},
 							)
 						}
 					case "#22":
 						if c.Name == "#66手机外壳精加工" {
 							db.Exec(
-								sql + "(?)",
-								[]interface{}{"WP201900220012", "line-p002", m.ID, c.ID, 20, 7, 4, 0, now, now},
+								sql+"(?)",
+								[]interface{}{"WP" + strconv.Itoa(201900220012+num), "line-p002", m.ID, c.ID, 60, 11, 8, 0, now, now},
 							)
 						}
 					case "#33":
 						if c.Name == "#54手机外壳精加工" {
 							db.Exec(
-								sql + "(?)",
-								[]interface{}{"WP201900220013", "line-p003", m.ID, c.ID, 20, 7, 4, 0, now, now},
+								sql+"(?)",
+								[]interface{}{"WP" + strconv.Itoa(201900220013+num), "line-p003", m.ID, c.ID, 70, 12, 9, 0, now, now},
 							)
 						}
 					}
@@ -418,44 +422,44 @@ func seedApsOrder() {
 						if len(craftIds) > 0 {
 							if user.Name == "葛旭" {
 								switch a.JobPlanNumber {
-								case "WP201987771341":
+								case "WP" + strconv.Itoa(201987771341+num):
 									db.Exec(
 										sql+"(?)",
-										[]interface{}{"WO1987701242", a.ID, user.ID, craftIds[0], 1, "通孔工位", 20, 7, 4, 0, now, now},
+										[]interface{}{"WO" + strconv.Itoa(1987701242+num*10), a.ID, user.ID, craftIds[0], 1, "通孔工位", 20, 7, 4, 0, now, now},
 									)
-								case "WP201966550001":
+								case "WP" + strconv.Itoa(201966550001+num):
 									db.Exec(
 										sql+"(?), (?)",
-										[]interface{}{"WO1987701243", a.ID, user.ID, craftIds[0], 1, "通孔工位", 20, 7, 4, 0, now, now},
-										[]interface{}{"WO1987701244", a.ID, user.ID, craftIds[1], 1, "通孔工位", 20, 7, 4, 0, now, now},
+										[]interface{}{"WO" + strconv.Itoa(1987701243+num*10), a.ID, user.ID, craftIds[0], 1, "通孔工位", 30, 8, 5, 0, now, now},
+										[]interface{}{"WO" + strconv.Itoa(1987701244+num*10), a.ID, user.ID, craftIds[1], 1, "通孔工位", 30, 8, 5, 0, now, now},
 									)
-								case "WP201966550002":
+								case "WP" + strconv.Itoa(201966550002+num):
 									db.Exec(
 										sql+"(?), (?), (?)",
-										[]interface{}{"WO1987701245", a.ID, user.ID, craftIds[0], 1, "通孔工位", 20, 7, 4, 0, now, now},
-										[]interface{}{"WO1987701246", a.ID, user.ID, craftIds[1], 1, "通孔工位", 20, 7, 4, 0, now, now},
-										[]interface{}{"WO1987701247", a.ID, user.ID, craftIds[2], 2, "激光工位", 20, 7, 4, 0, now, now},
+										[]interface{}{"WO" + strconv.Itoa(1987701245+num*10), a.ID, user.ID, craftIds[0], 1, "通孔工位", 40, 9, 6, 0, now, now},
+										[]interface{}{"WO" + strconv.Itoa(1987701246+num*10), a.ID, user.ID, craftIds[1], 1, "通孔工位", 40, 9, 6, 0, now, now},
+										[]interface{}{"WO" + strconv.Itoa(1987701247+num*10), a.ID, user.ID, craftIds[2], 2, "激光工位", 40, 9, 6, 0, now, now},
 									)
 								}
 							}
 							if user.Name == "韩鹏" {
 								switch a.JobPlanNumber {
-								case "WP201900220011":
+								case "WP" + strconv.Itoa(201900220011+num):
 									db.Exec(
 										sql+"(?)",
-										[]interface{}{"WO1987701248", a.ID, user.ID, craftIds[0], 2, "激光工位", 20, 7, 4, 0, now, now},
+										[]interface{}{"WO" + strconv.Itoa(1987701248+num*10), a.ID, user.ID, craftIds[0], 2, "激光工位", 50, 10, 7, 0, now, now},
 									)
-								case "WP201900220012":
+								case "WP" + strconv.Itoa(201900220012+num):
 									db.Exec(
 										sql+"(?), (?)",
-										[]interface{}{"WO1987701249", a.ID, user.ID, craftIds[0], 2, "激光工位", 20, 7, 4, 0, now, now},
-										[]interface{}{"WO1987701250", a.ID, user.ID, craftIds[1], 2, "激光工位", 20, 7, 4, 0, now, now},
+										[]interface{}{"WO" + strconv.Itoa(1987701249+num*10), a.ID, user.ID, craftIds[0], 2, "激光工位", 60, 11, 8, 0, now, now},
+										[]interface{}{"WO" + strconv.Itoa(1987701250+num*10), a.ID, user.ID, craftIds[1], 2, "激光工位", 60, 11, 8, 0, now, now},
 									)
-								case "WP201900220013":
+								case "WP" + strconv.Itoa(201900220013+num):
 									db.Exec(
 										sql+"(?), (?)",
-										[]interface{}{"WO1987701251", a.ID, user.ID, craftIds[0], 2, "激光工位", 20, 7, 4, 0, now, now},
-										[]interface{}{"WO1987701252", a.ID, user.ID, craftIds[1], 2, "激光工位", 20, 7, 4, 0, now, now},
+										[]interface{}{"WO" + strconv.Itoa(1987701251+num*10), a.ID, user.ID, craftIds[0], 2, "激光工位", 70, 12, 9, 0, now, now},
+										[]interface{}{"WO" + strconv.Itoa(1987701252+num*10), a.ID, user.ID, craftIds[1], 2, "激光工位", 70, 12, 9, 0, now, now},
 									)
 								}
 							}
@@ -465,6 +469,7 @@ func seedApsOrder() {
 			}
 		}
 	}
+	seedOrderQuality()
 }
 
 // andon数据填充
@@ -505,22 +510,25 @@ func seedOrderQuality() {
 
 	db := NewDB()
 
-	var quality model.ApsOrderQuality
-	db.First(&quality)
-	if quality.ID == 0 {
+	var apsList []model.Aps
+	db.Where("status = ?", model.APS_STATUS_DEFAULT).Find(&apsList)
+
+	var apsIds []uint
+	for _, aps := range apsList {
+		apsIds = append(apsIds, aps.ID)
+	}
+
+	if apsIds != nil && len(apsIds) > 0 {
 
 		var orders []model.ApsOrder
-		db.Find(&orders)
-
-		if orders != nil && len(orders) > 0 {
-			for _, order := range orders {
-				db.Exec(
-					"INSERT INTO `aps_order_qualities` (`order_id`, `piece_no`, `result`, `remark`) VALUES (?), (?), (?)",
-					[]interface{}{order.ID, "wu-887109902", "返工", ""},
-					[]interface{}{order.ID, "wu-887109905", "报废", ""},
-					[]interface{}{order.ID, "wu-887109907", "返工", ""},
-				)
-			}
+		db.Where("aps_id in (?)", apsIds).Find(&orders)
+		for _, order := range orders {
+			db.Exec(
+				"INSERT INTO `aps_order_qualities` (`order_id`, `piece_no`, `result`, `remark`) VALUES (?), (?), (?)",
+				[]interface{}{order.ID, "wu-887109902", "返工", ""},
+				[]interface{}{order.ID, "wu-887109905", "报废", ""},
+				[]interface{}{order.ID, "wu-887109907", "返工", ""},
+			)
 		}
 	}
 }

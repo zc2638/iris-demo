@@ -16,6 +16,14 @@ func (s *ApsService) GetAll() (all []model.Aps) {
 	return
 }
 
+// 获取aps当前数量
+func (s *ApsService) Count() (count int) {
+
+	db := database.NewDB()
+	db.Model(&model.Aps{}).Count(&count)
+	return
+}
+
 // 根据产品型号id获取aps
 func (s *ApsService) GetListByModelIds(ids interface{}) (list []model.Aps) {
 

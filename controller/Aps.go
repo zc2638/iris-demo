@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"sop/lib/database"
 	"sop/model"
 	"sop/service"
 	"strconv"
@@ -32,6 +33,16 @@ func (c *ApsController) GetList() {
 	var all []model.Aps
 	if productID == "" {
 		all = new(service.ApsService).GetAll()
+		var allCurrent []model.Aps
+		for _, v := range all {
+			if v.Status == model.APS_STATUS_DEFAULT {
+				allCurrent = append(allCurrent, v)
+			}
+		}
+		if allCurrent == nil || len(allCurrent) == 0 {
+			count := new(service.ApsService).Count()
+			database.SeedApsOrder(count)
+		}
 	} else {
 		all = new(service.ApsService).GetListByModelIds(modelIds)
 
