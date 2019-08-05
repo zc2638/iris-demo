@@ -19,6 +19,7 @@ func (s *SopService) GetList(page, pageSize int) (list []model.Sop) {
 		Preload("SopModel").
 		Preload("Product").
 		Preload("Craft").
+		Order("id DESC").
 		Find(&list)
 	return
 }
@@ -42,7 +43,11 @@ func (s *SopService) GetAll(isAll bool) (list []model.Sop) {
 func (s *SopService) GetTemplateAllByCraftID(id interface{}) (all []model.Sop) {
 
 	db := database.NewDB()
-	db.Where("is_template = ?", 1).Where("craft_id = ?", id).Preload("SopProcess").Find(&all)
+	db.Where("is_template = ?", 1).
+		Where("craft_id = ?", id).
+		Preload("SopProcess").
+		Order("id DESC").
+		Find(&all)
 	return
 }
 

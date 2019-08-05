@@ -54,7 +54,12 @@ func (c *FaceController) PostLogin() {
 
 	var orders []model.ApsOrder
 	if user.ID == 1 {
-		orders = new(service.ApsService).GetOrderAll()
+		ordersAll := new(service.ApsService).GetOrderAll()
+		for _, v := range ordersAll {
+			if v.Status == model.APS_STATUS_START {
+				orders = append(orders, v)
+			}
+		}
 	} else {
 		orders = new(service.ApsService).GetOrdersByUidAndStation(user.ID, station)
 	}
