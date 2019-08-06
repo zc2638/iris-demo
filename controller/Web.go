@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/kataras/iris"
+	"sop/model"
 	"sop/service"
 )
 
@@ -10,7 +11,13 @@ type WebController struct{ Base }
 // 工单列表
 func (c *WebController) GetOrders() {
 
-	list := new(service.ApsService).GetOrderAll()
+	orderAll := new(service.ApsService).GetOrderAll()
+	var list []model.ApsOrder
+	for _, v := range orderAll {
+		if v.Status == model.APS_STATUS_START {
+			list = append(list, v)
+		}
+	}
 
 	var data = make([]map[string]interface{}, 0)
 	for _, v := range list {
