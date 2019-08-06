@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sop/model"
 	"sop/service"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -80,7 +81,7 @@ func (c *SopController) GetTemplate() {
 			// sop模板id
 			"value": v.ID,
 			// sop模板名称,
-			"label": v.Title,
+			"label": v.Title + "v" + strconv.Itoa(int(v.Version)),
 			"table": table,
 		})
 	}
