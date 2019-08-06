@@ -53,7 +53,7 @@ func (c *FaceController) PostLogin() {
 	}
 
 	var orders []model.ApsOrder
-	if user.ID == 1 {
+	if user.ID == 1 || user.Name == "红兵" || user.Name == "祥宁" {
 		ordersAll := new(service.ApsService).GetOrderAll()
 		for _, v := range ordersAll {
 			if v.Status == model.APS_STATUS_START {
