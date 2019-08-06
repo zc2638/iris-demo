@@ -81,7 +81,7 @@ func (c *SopController) GetTemplate() {
 			// sop模板id
 			"value": v.ID,
 			// sop模板名称,
-			"label": v.Title + "v" + strconv.Itoa(int(v.Version)),
+			"label": v.Title + " v" + strconv.Itoa(int(v.Version)),
 			"table": table,
 		})
 	}
