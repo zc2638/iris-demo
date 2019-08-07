@@ -7,7 +7,7 @@ import (
 	"sop/lib/curl"
 )
 
-const domain = "http://192.168.61.11:31575"
+const domain = "http://esop-imagex.shanghai.cosmoplat.com"
 
 type InfoResult struct {
 	Info struct {
