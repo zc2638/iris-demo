@@ -33,7 +33,18 @@ func (c *HomeController) GetOrders() {
 		return
 	}
 
-	orders := new(service.ApsService).GetOrdersByUidAndStation(user.ID, station)
+	var orders []model.ApsOrder
+	if user.ID == 1 || user.Name == "红兵" || user.Name == "祥宁" {
+		ordersAll := new(service.ApsService).GetOrderAll()
+		for _, v := range ordersAll {
+			if v.Status == model.APS_STATUS_START {
+				orders = append(orders, v)
+			}
+		}
+	} else {
+		orders = new(service.ApsService).GetOrdersByUidAndStation(user.ID, station)
+	}
+
 
 	var modelIds = make([]uint, 0)
 	for _, v := range orders {
