@@ -26,6 +26,7 @@ func main() {
 
 	mvc.New(app.Party("/home")).Handle(new(controller.HomeController))
 	mvc.New(app.Party("/face")).Handle(new(controller.FaceController))
+	mvc.New(app.Party("/party")).Handle(new(controller.PartyController))
 
 	api := app.Party("/api")
 	{

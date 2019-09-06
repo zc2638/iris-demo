@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/kataras/iris/core/errors"
+	"sop/data"
 	"sop/lib/database"
 	"sop/model"
 )
@@ -72,6 +73,14 @@ func (s *ApsService) GetOrderByID(id interface{}) (order model.ApsOrder) {
 	return
 }
 
+// 根据orderID获取order
+func (s *ApsService) GetOrderByOrderID(orderID interface{}) (order model.ApsOrder) {
+
+	db := database.NewDB()
+	db.Where("order_id = ?", orderID).First(&order)
+	return
+}
+
 // 根据station和uid获取aps集合
 func (s *ApsService) GetOrdersByUidAndStation(uid, station interface{}) (list []model.ApsOrder) {
 
@@ -115,7 +124,6 @@ func (s *ApsService) UpdateApsAndOrder(apsList []model.Aps, orders []model.ApsOr
 // 重置aps和order状态
 func (s *ApsService) UpdateApsAndOrderToDefaultStatus() {
 
-
 	db := database.NewDB()
 
 	db.Model(&model.Aps{}).Updates(map[string]interface{}{
@@ -123,7 +131,115 @@ func (s *ApsService) UpdateApsAndOrderToDefaultStatus() {
 		"sop_id": 0,
 	})
 	db.Model(&model.ApsOrder{}).Updates(map[string]interface{}{
-		"status": model.APS_STATUS_DEFAULT,
+		"status":         model.APS_STATUS_DEFAULT,
 		"sop_process_id": 0,
 	})
+}
+
+// 批量创建
+func (s *ApsService) Insert(apsList []data.PartyAps) error {
+
+	db := database.NewDB()
+	tx := db.Begin()
+	for _, a := range apsList {
+		if a.Order == nil || len(a.Order) == 0 {
+			continue
+		}
+
+		productService := new(ProductService)
+		product := productService.GetProductByName(a.Product)
+		if product.ID == 0 {
+			continue
+		}
+		productModel := productService.GetModelByName(product.ID, a.Model)
+		if productModel.ID == 0 {
+			continue
+		}
+
+		craft := new(CraftService).GetCraftByName(a.CraftName)
+		if craft.ID == 0 {
+			continue
+		}
+
+		aps := model.Aps{
+			JobPlanNumber: a.JobPlanNumber,
+			SerialNo:      a.SerialNo,
+			ModelID:       productModel.ID,
+			CraftID:       craft.ID,
+			PlanTotal:     a.PlanTotal,
+			PlanNum:       a.PlanNum,
+			CompleteNum:   a.CompleteNum,
+		}
+		tx.Create(&aps)
+		if tx.NewRecord(aps) == true {
+			tx.Rollback()
+			return errors.New("创建失败")
+		}
+
+		for _, o := range a.Order {
+			var processID uint
+			for _, m := range craft.CraftItem {
+				if o.CraftItemName == m.Name {
+					processID = m.ID
+				}
+			}
+			if processID == 0 {
+				tx.Rollback()
+				return errors.New("创建失败")
+			}
+
+			user := new(UserService).GetUserByUid(o.Uid)
+			if user.ID == 0 {
+				tx.Rollback()
+				return errors.New("创建失败")
+			}
+
+			order := model.ApsOrder{
+				OrderID:     o.OrderID,
+				ApsID:       aps.ID,
+				Uid:         user.ID,
+				ProcessID:   processID,
+				Station:     o.Station,
+				StationName: o.StationName,
+				Total:       o.Total,
+				Num:         o.Num,
+				CompleteNum: o.CompleteNum,
+				StartAt:     o.StartAt,
+				EndAt:       o.EndAt,
+			}
+			tx.Create(&order)
+			if tx.NewRecord(order) == true {
+				tx.Rollback()
+				return errors.New("创建失败")
+			}
+		}
+	}
+	tx.Commit()
+	return nil
+}
+
+// 批量创建质检
+func (s *ApsService) InsertQuality(qualities []data.PartyQuality) error {
+
+	db := database.NewDB()
+	tx := db.Begin()
+	for _, q := range qualities {
+		order := s.GetOrderByOrderID(q.OrderID)
+		if order.ID == 0 {
+			continue
+		}
+		quality := model.ApsOrderQuality{
+			OrderID: order.ID,
+			PieceNo: q.PieceNo,
+			Result:  q.Result,
+			Remark:  q.Remark,
+		}
+		tx.Create(&quality)
+		if tx.NewRecord(quality) == true {
+			tx.Rollback()
+			return errors.New("创建失败")
+		}
+	}
+	tx.Commit()
+	return nil
 }

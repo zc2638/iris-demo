@@ -36,3 +36,19 @@ func (s *CheckService) UpdateOne(check model.Check) error {
 	}
 	return nil
 }
+
+// 批量创建
+func (s *CheckService) Insert(checks []model.Check) error {
+
+	db := database.NewDB()
+	tx := db.Begin()
+	for _, check := range checks {
+		tx.Create(&check)
+		if tx.NewRecord(check) == true {
+			tx.Rollback()
+			return errors.New("创建失败")
+		}
+	}
+	tx.Commit()
+	return nil
+}

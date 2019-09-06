@@ -43,7 +43,7 @@ require (
 	github.com/qiniu/x v7.0.8+incompatible // indirect
 	github.com/ryanuber/columnize v2.1.0+incompatible // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
-	github.com/zctod/go-tool v0.0.3
+	github.com/zctod/go-tool v0.0.7
 	go.opencensus.io v0.22.0 // indirect
 	golang.org/x/crypto v0.0.0-20190605123033-f99c8df09eb5 // indirect
 	golang.org/x/exp v0.0.0-20190510132918-efd6b22b2522 // indirect
