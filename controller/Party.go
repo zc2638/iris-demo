@@ -5,6 +5,7 @@ import (
 	"sop/data"
 	"sop/model"
 	"sop/service"
+	"strings"
 )
 
 /**
@@ -17,6 +18,12 @@ type PartyController struct{ Base }
 func (c *PartyController) PostSyncAndon() {
 
 	source := c.Ctx.PostValue("source")
+	trimSource := strings.Replace(source, " ", "", -1)
+	if trimSource == "[{}]" || trimSource == "[{},]" {
+		c.Err("请求数据不能为空")
+		return
+	}
+
 	var andonData []data.PartyAndon
 	if err := json.Unmarshal([]byte(source), &andonData); err != nil {
 		c.Err("请求格式错误")
@@ -47,6 +54,12 @@ func (c *PartyController) PostSyncAndon() {
 func (c *PartyController) PostSyncProduct() {
 
 	source := c.Ctx.PostValue("source")
+	trimSource := strings.Replace(source, " ", "", -1)
+	if trimSource == "[{}]" || trimSource == "[{},]" {
+		c.Err("请求数据不能为空")
+		return
+	}
+
 	var productData []data.PartyProduct
 	if err := json.Unmarshal([]byte(source), &productData); err != nil {
 		c.Err("请求格式错误")
@@ -64,6 +77,12 @@ func (c *PartyController) PostSyncProduct() {
 func (c *PartyController) PostSyncCraft() {
 
 	source := c.Ctx.PostValue("source")
+	trimSource := strings.Replace(source, " ", "", -1)
+	if trimSource == "[{}]" || trimSource == "[{},]" {
+		c.Err("请求数据不能为空")
+		return
+	}
+
 	var craftData []data.PartyCraft
 	if err := json.Unmarshal([]byte(source), &craftData); err != nil {
 		c.Err("请求格式错误")
@@ -81,8 +100,13 @@ func (c *PartyController) PostSyncCraft() {
 func (c *PartyController) PostSyncAps() {
 
 	source := c.Ctx.PostValue("source")
-	var apsData []data.PartyAps
+	trimSource := strings.Replace(source, " ", "", -1)
+	if trimSource == "[{}]" || trimSource == "[{},]" {
+		c.Err("请求数据不能为空")
+		return
+	}
 
+	var apsData []data.PartyAps
 	if err := json.Unmarshal([]byte(source), &apsData); err != nil {
 		c.Err("请求格式错误")
 		return
@@ -98,6 +122,12 @@ func (c *PartyController) PostSyncAps() {
 func (c *PartyController) PostSyncQuality() {
 
 	source := c.Ctx.PostValue("source")
+	trimSource := strings.Replace(source, " ", "", -1)
+	if trimSource == "[{}]" || trimSource == "[{},]" {
+		c.Err("请求数据不能为空")
+		return
+	}
+
 	var qualityData []data.PartyQuality
 	if err := json.Unmarshal([]byte(source), &qualityData); err != nil {
 		c.Err("请求格式错误")
@@ -114,6 +144,12 @@ func (c *PartyController) PostSyncQuality() {
 func (c *PartyController) PostSyncUser() {
 
 	source := c.Ctx.PostValue("source")
+	trimSource := strings.Replace(source, " ", "", -1)
+	if trimSource == "[{}]" || trimSource == "[{},]" {
+		c.Err("请求数据不能为空")
+		return
+	}
+
 	var userData []struct {
 		UID        string `json:"uid"`                        // 用户id
 		Name       string `gorm:"size:50" json:"name"`        // 名称
@@ -153,6 +189,12 @@ func (c *PartyController) PostSyncUser() {
 func (c *PartyController) PostSyncCheck() {
 
 	source := c.Ctx.PostValue("source")
+	trimSource := strings.Replace(source, " ", "", -1)
+	if trimSource == "[{}]" || trimSource == "[{},]" {
+		c.Err("请求数据不能为空")
+		return
+	}
+
 	var checkData []struct {
 		Url    string `json:"url"`    // 图片url
 		Colors string `json:"colors"` // 颜色信息
