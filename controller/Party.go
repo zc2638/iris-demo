@@ -19,7 +19,7 @@ func (c *PartyController) PostSyncAndon() {
 
 	source := c.Ctx.PostValue("source")
 	trimSource := strings.Replace(source, " ", "", -1)
-	if trimSource == "[{}]" || trimSource == "[{},]" {
+	if trimSource == "[]" || trimSource == "[{}]" || trimSource == "[{},]" {
 		c.Err("请求数据不能为空")
 		return
 	}
@@ -55,7 +55,7 @@ func (c *PartyController) PostSyncProduct() {
 
 	source := c.Ctx.PostValue("source")
 	trimSource := strings.Replace(source, " ", "", -1)
-	if trimSource == "[{}]" || trimSource == "[{},]" {
+	if trimSource == "[]" || trimSource == "[{}]" || trimSource == "[{},]" {
 		c.Err("请求数据不能为空")
 		return
 	}
@@ -78,7 +78,7 @@ func (c *PartyController) PostSyncCraft() {
 
 	source := c.Ctx.PostValue("source")
 	trimSource := strings.Replace(source, " ", "", -1)
-	if trimSource == "[{}]" || trimSource == "[{},]" {
+	if trimSource == "[]" || trimSource == "[{}]" || trimSource == "[{},]" {
 		c.Err("请求数据不能为空")
 		return
 	}
@@ -101,7 +101,7 @@ func (c *PartyController) PostSyncAps() {
 
 	source := c.Ctx.PostValue("source")
 	trimSource := strings.Replace(source, " ", "", -1)
-	if trimSource == "[{}]" || trimSource == "[{},]" {
+	if trimSource == "[]" || trimSource == "[{}]" || trimSource == "[{},]" {
 		c.Err("请求数据不能为空")
 		return
 	}
@@ -123,7 +123,7 @@ func (c *PartyController) PostSyncQuality() {
 
 	source := c.Ctx.PostValue("source")
 	trimSource := strings.Replace(source, " ", "", -1)
-	if trimSource == "[{}]" || trimSource == "[{},]" {
+	if trimSource == "[]" || trimSource == "[{}]" || trimSource == "[{},]" {
 		c.Err("请求数据不能为空")
 		return
 	}
@@ -145,7 +145,7 @@ func (c *PartyController) PostSyncUser() {
 
 	source := c.Ctx.PostValue("source")
 	trimSource := strings.Replace(source, " ", "", -1)
-	if trimSource == "[{}]" || trimSource == "[{},]" {
+	if trimSource == "[]" || trimSource == "[{}]" || trimSource == "[{},]" {
 		c.Err("请求数据不能为空")
 		return
 	}
@@ -190,7 +190,7 @@ func (c *PartyController) PostSyncCheck() {
 
 	source := c.Ctx.PostValue("source")
 	trimSource := strings.Replace(source, " ", "", -1)
-	if trimSource == "[{}]" || trimSource == "[{},]" {
+	if trimSource == "[]" || trimSource == "[{}]" || trimSource == "[{},]" {
 		c.Err("请求数据不能为空")
 		return
 	}
