@@ -39,21 +39,25 @@ func (c *FaceController) PostLogin() {
 	}
 
 	var user model.User
-	if result.Results[0].Confidence < result.Thresholds.OneE5 {
-		// 识别失败，则指定默认用户
-		user = new(service.UserService).GetUserByID(1)
-	} else {
-		faceToken := result.Results[0].FaceToken
-		fmt.Println(faceToken)
-		user = new(service.UserService).GetUserByFaceToken(faceToken)
-	}
+	//if result.Results[0].Confidence < result.Thresholds.OneE5 {
+	//	// 识别失败，则指定默认用户
+	//	user = new(service.UserService).GetUserByID(1)
+	//} else {
+	//	faceToken := result.Results[0].FaceToken
+	//	fmt.Println(faceToken)
+	//	user = new(service.UserService).GetUserByFaceToken(faceToken)
+	//}
+
+	faceToken := result.Results[0].FaceToken
+	fmt.Println(faceToken)
+	user = new(service.UserService).GetUserByFaceToken(faceToken)
 	if user.ID == 0 {
 		c.Err("不存在的用户")
 		return
 	}
 
 	var orders []model.ApsOrder
-	if user.ID == 1 || user.Name == "红兵" || user.Name == "祥宁" {
+	if user.Name == "红兵" || user.Name == "祥宁" {
 		ordersAll := new(service.ApsService).GetOrderAll()
 		for _, v := range ordersAll {
 			if v.Status == model.APS_STATUS_START {
