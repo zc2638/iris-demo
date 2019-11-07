@@ -15,12 +15,13 @@ func init() {
 
 	var err error
 
+	//DB, err = gorm.Open("mysql", "root:Edn@ESR-3+@tcp(esop-mysql.shanghai.cosmoplat.com:35219)/sop?charset=utf8mb4&parseTime=True&loc=Local")
 	//DB, err = gorm.Open("mysql", "root:@tcp(localhost:3306)/sop?charset=utf8mb4&parseTime=True&loc=Local")
 	//if err != nil {
 	//	panic(err)
 	//}
 
-	DB, err = gorm.Open("sqlite3", "sop.db")
+	DB, err = gorm.Open("sqlite3", "db/sop.db")
 	if err != nil {
 		fmt.Println(err)
 		panic("连接数据库失败")
